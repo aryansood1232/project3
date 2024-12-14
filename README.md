@@ -1,8 +1,8 @@
-Vulnerability Proof of Concept README
+vVulnerability Proof of Concept README
 
 This README describes how to run the Proof of Concept (PoC) scripts for each vulnerability discovered in the password management system. Each section includes setup instructions, how to run the PoC, and a brief description of the attack.
 
-Vulnerability 1: Command Injection via JSON Parsing
+Vulnerability 1: Command Injection via JSON Parsing (Old)
 Description
 
 This vulnerability leverages command injection in the parse_json_file() function. The JSON rule file can include malicious input in the rules field, which is directly incorporated into the system’s command execution, allowing the attacker to run arbitrary commands.
@@ -23,7 +23,7 @@ Justification
 
 This attack shows that malicious commands can be executed within the system context, allowing unauthorized actions and potentially compromising system integrity.
 
-Vulnerability 2: Command Injection via Unsafe grep Command in gen_password()
+Vulnerability 2: Command Injection via Unsafe grep Command in gen_password() (old)
 Description
 
 In the gen_password() function, regex patterns from the JSON file are used directly in a grep command. This PoC demonstrates command injection through unvalidated regex input, allowing execution of additional commands.
@@ -44,7 +44,7 @@ Justification
 
 This demonstrates the risk of executing unvalidated regex patterns as system commands, highlighting potential unauthorized command execution and system control by an attacker.
 
-Vulnerability 3: Buffer Overflow in JSON Rule File Processing
+Vulnerability 3: Buffer Overflow in JSON Rule File Processing (old)
 Description
 
 This vulnerability arises in parse_json_file() due to the unvalidated length of JSON fields like site. By supplying an overly large site value, this PoC demonstrates a buffer overflow, which may corrupt adjacent memory or crash the application.
@@ -65,7 +65,7 @@ Justification
 
 The attack shows how unvalidated JSON data length could lead to crashes or data corruption, potentially destabilizing the application and impacting system reliability.
 
-## Vulnerability 4: Command Injection via Unsanitized Inputs in `callSQL()` and `callSiteSQL()`
+## Vulnerability 4: Command Injection via Unsanitized Inputs in `callSQL()` and `callSiteSQL()` (old)
 
 ### Description
 
@@ -97,6 +97,27 @@ Additionally, a file named /tmp/injection_test.txt should be created on the serv
 Justification
 
 This attack demonstrates that malicious commands can be executed within the system context, allowing unauthorized actions and potentially compromising system integrity. Creating files or echoing messages serves as a clear indicator of successful command injection.
+
+
+
+Vulnerability 5: Path Traversal Attack via JSON Rule File (the only new one)
+
+Description
+This vulnerability leverages the site field in the JSON rule file, allowing an attacker to perform a path traversal attack. The attacker can use traversal sequences such as ../../ to write or overwrite files outside the intended directory. This PoC specifically writes a confirmation message to /tmp/attack_successful to demonstrate the vulnerability.
+
+Steps to Run
+Ensure the vul_5.sh script is in the same directory as the main application.
+Run the following command:
+bash vul_5.sh
+Expected Outcome
+The PoC will create a file at /tmp/attack_successful with an indicator message confirming the attack. If the attack is successful, you will see the following output:
+
+[!] Path traversal attack successful: Vulnerability confirmed.
+Justification
+This attack demonstrates the risks of unvalidated file paths in the site field. An attacker can overwrite or create unauthorized files, potentially compromising the system or disrupting its integrity. Proper input validation is required to mitigate this risk.
+
+
+
 
 
 For all PoC scripts:
