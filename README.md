@@ -1,4 +1,4 @@
-vVulnerability Proof of Concept README
+Vulnerability Proof of Concept README
 
 This README describes how to run the Proof of Concept (PoC) scripts for each vulnerability discovered in the password management system. Each section includes setup instructions, how to run the PoC, and a brief description of the attack.
 
